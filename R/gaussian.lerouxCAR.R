@@ -1,4 +1,4 @@
-gaussian.lerouxCAR <- function(formula, data=NULL, W.quants, burnin, n.sample, thin=1, prior.mean.beta=NULL, prior.var.beta=NULL, prior.nu2=NULL, prior.tau2=NULL, rho=NULL, verbose=TRUE)
+gaussian.lerouxCAR <- function(formula, data=NULL, W.quants, burnin, n.sample, thin=1, prior.mean.beta=NULL, prior.var.beta=NULL, prior.nu2=NULL, prior.tau2=NULL, rho=NULL, verbose=TRUE, Wstar.eigen = NULL)
 {
 ##############################################
 #### Format the arguments and check for errors
@@ -115,8 +115,10 @@ print( paste( "W.quants section at", round(proc.time()[3]-a[3], 1)))
 #### Create the determinant     
     if(!fix.rho)
     {
-    Wstar <- diag(apply(W,1,sum)) - W
-    Wstar.eigen <- eigen(Wstar)
+      if( is.null( Wstar.eigen)){
+        Wstar <- diag(apply(W,1,sum)) - W
+        Wstar.eigen <- eigen(Wstar)
+      }
     Wstar.val <- Wstar.eigen$values
     det.Q <- 0.5 * sum(log((rho * Wstar.val + (1-rho))))    
     }else
