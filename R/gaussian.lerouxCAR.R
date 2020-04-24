@@ -235,7 +235,7 @@ print( paste( "Beta update section at", round(proc.time()[3]-a[3], 1)))
         proposal.rho <- rtruncnorm(n=1, a=0, b=1, mean=rho, sd=proposal.sd.rho)  
         print( proposal.rho)
         temp3 <- quadform(W.triplet, W.triplet.sum, n.triplet, K, phi, phi, proposal.rho)
-        print( temp3)
+        print( paste( W.triplet, W.triplet.sum, n.triplet, K, phi))
         det.Q.proposal <- 0.5 * sum(log((proposal.rho * Wstar.val + (1-proposal.rho))))              
         print( det.Q.proposal)
         logprob.current <- det.Q - temp2 / tau2
