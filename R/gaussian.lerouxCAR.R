@@ -6,7 +6,6 @@ gaussian.lerouxCAR <- function(formula, data=NULL, W.quants, burnin, n.sample, t
 #### Verbose
 a <- common.verbose(verbose)
     
-    
 #### Frame object
 frame.results <- common.frame(formula, data, "gaussian")
 K <- frame.results$n
@@ -22,6 +21,8 @@ which.miss <- frame.results$which.miss
 n.miss <- frame.results$n.miss  
 Y.DA <- Y
 
+print( paste( "Frame object section at", round(proc.time()[3]-a[3], 1)))
+
     
 #### rho
     if(is.null(rho))
@@ -36,6 +37,7 @@ Y.DA <- Y
     if(rho<0 ) stop("rho is outside the range [0, 1].", call.=FALSE)  
     if(rho>1 ) stop("rho is outside the range [0, 1].", call.=FALSE)      
 
+print( paste( "rho section at", round(proc.time()[3]-a[3], 1)))
 
 #### Priors
     if(is.null(prior.mean.beta)) prior.mean.beta <- rep(0, p)
@@ -45,10 +47,12 @@ Y.DA <- Y
 common.prior.beta.check(prior.mean.beta, prior.var.beta, p)
 common.prior.var.check(prior.tau2)    
 common.prior.var.check(prior.nu2)  
+print( paste( "Priors section at", round(proc.time()[3]-a[3], 1)))
 
 
 #### MCMC quantities - burnin, n.sample, thin
 common.burnin.nsample.thin.check(burnin, n.sample, thin)  
+print( paste( "MCMC quantities section at", round(proc.time()[3]-a[3], 1)))
 
 
 
@@ -66,7 +70,8 @@ phi <- rnorm(n=K, mean=rep(0,K), sd=res.sd)
 tau2 <- var(phi) / 10
 nu2 <- tau2
 fitted <- as.numeric(X.standardised %*% beta) + offset + phi
-   
+print( paste( "Initial parameter values section at", round(proc.time()[3]-a[3], 1)))
+
  
 ###############################    
 #### Set up the MCMC quantities    
@@ -81,7 +86,8 @@ samples.tau2 <- array(NA, c(n.keep, 1))
 samples.loglike <- array(NA, c(n.keep, K))
 samples.fitted <- array(NA, c(n.keep, K))
     if(n.miss>0) samples.Y <- array(NA, c(n.keep, n.miss))
-    
+print( paste( "Matrices section at", round(proc.time()[3]-a[3], 1)))
+
 
 #### Metropolis quantities
 accept <- rep(0,2)
@@ -89,7 +95,8 @@ accept.all <- accept
 proposal.sd.rho <- 0.02
 tau2.posterior.shape <- prior.tau2[1] + 0.5*K
 nu2.posterior.shape <- prior.nu2[1] + 0.5*K
-    
+print( paste( "Metropolis section at", round(proc.time()[3]-a[3], 1)))
+
     
 ##################################
 #### Set up the spatial quantities
@@ -102,7 +109,8 @@ n.triplet <- W.quants$n.triplet
 W.triplet.sum <- W.quants$W.triplet.sum
 n.neighbours <- W.quants$n.neighbours 
 W.begfin <- W.quants$W.begfin
-    
+print( paste( "W.quants section at", round(proc.time()[3]-a[3], 1)))
+
     
 #### Create the determinant     
     if(!fix.rho)
@@ -113,7 +121,8 @@ W.begfin <- W.quants$W.begfin
     det.Q <- 0.5 * sum(log((rho * Wstar.val + (1-rho))))    
     }else
     {}   
-    
+print( paste( "Create determinants section at", round(proc.time()[3]-a[3], 1)))
+
     
 #### Check for islands
 W.list<- mat2listw(W)
@@ -122,7 +131,8 @@ W.islands <- n.comp.nb(W.nb)
 islands <- W.islands$comp.id
 n.islands <- max(W.islands$nc)
 if(rho==1) tau2.posterior.shape <- prior.tau2[1] + 0.5 * (K-n.islands)   
-    
+print( paste( "Check for islands section at", round(proc.time()[3]-a[3], 1)))
+
     
 #### Beta update quantities
 data.precision.beta <- t(X.standardised) %*% X.standardised
@@ -134,7 +144,8 @@ data.precision.beta <- t(X.standardised) %*% X.standardised
     prior.precision.beta <- solve(diag(prior.var.beta))
     }
     
-    
+print( paste( "Beta update section at", round(proc.time()[3]-a[3], 1)))
+
 
 ###########################
 #### Run the Bayesian model
