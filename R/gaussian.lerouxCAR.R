@@ -123,8 +123,6 @@ print( paste( "W.quants section at", round(proc.time()[3]-a[3], 1)))
     det.Q <- 0.5 * sum(log((rho * Wstar.val + (1-rho))))    
     }else
     {}   
-print( det.Q)
-print( paste( "det.Q is", det.Q))
 print( paste( "Create determinants section at", round(proc.time()[3]-a[3], 1)))
 
     
@@ -233,20 +231,13 @@ print( paste( "Beta update section at", round(proc.time()[3]-a[3], 1)))
         if(!fix.rho)
         {
         proposal.rho <- rtruncnorm(n=1, a=0, b=1, mean=rho, sd=proposal.sd.rho)  
-        print( proposal.rho)
         temp3 <- quadform(W.triplet, W.triplet.sum, n.triplet, K, phi, phi, proposal.rho)
-        print( paste( W.triplet, W.triplet.sum, n.triplet, K, phi))
         det.Q.proposal <- 0.5 * sum(log((proposal.rho * Wstar.val + (1-proposal.rho))))              
-        print( det.Q.proposal)
         logprob.current <- det.Q - temp2 / tau2
-        print( logprob.current)
         logprob.proposal <- det.Q.proposal - temp3 / tau2
-        print( logprob.proposal)
         hastings <- log(dtruncnorm(x=rho, a=0, b=1, mean=proposal.rho, sd=proposal.sd.rho)) - log(dtruncnorm(x=proposal.rho, a=0, b=1, mean=rho, sd=proposal.sd.rho)) 
-        print( hastings)
         prob <- exp(logprob.proposal - logprob.current + hastings)
-        print( prob)
-        
+
         #### Accept or reject the proposal
             if(prob > runif(1))
             {
