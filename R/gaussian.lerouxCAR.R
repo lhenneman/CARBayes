@@ -1,12 +1,11 @@
-gaussian.lerouxCAR <- function(formula, data=NULL, W, burnin, n.sample, thin=1, prior.mean.beta=NULL, prior.var.beta=NULL, prior.nu2=NULL, prior.tau2=NULL, rho=NULL, verbose=TRUE)
+gaussian.lerouxCAR <- function(formula, data=NULL, W.quants, burnin, n.sample, thin=1, prior.mean.beta=NULL, prior.var.beta=NULL, prior.nu2=NULL, prior.tau2=NULL, rho=NULL, verbose=TRUE)
 {
 ##############################################
 #### Format the arguments and check for errors
 ##############################################
 #### Verbose
 a <- common.verbose(verbose)
-
-start.time <- Sys.time()    
+    
     
 #### Frame object
 frame.results <- common.frame(formula, data, "gaussian")
@@ -23,7 +22,6 @@ which.miss <- frame.results$which.miss
 n.miss <- frame.results$n.miss  
 Y.DA <- Y
 
-print( paste( 'Frame section took', Sys.time() - start.time))
     
 #### rho
     if(is.null(rho))
@@ -38,7 +36,6 @@ print( paste( 'Frame section took', Sys.time() - start.time))
     if(rho<0 ) stop("rho is outside the range [0, 1].", call.=FALSE)  
     if(rho>1 ) stop("rho is outside the range [0, 1].", call.=FALSE)      
 
-print( paste( 'rho section took', Sys.time() - start.time))
 
 #### Priors
     if(is.null(prior.mean.beta)) prior.mean.beta <- rep(0, p)
@@ -49,12 +46,10 @@ common.prior.beta.check(prior.mean.beta, prior.var.beta, p)
 common.prior.var.check(prior.tau2)    
 common.prior.var.check(prior.nu2)  
 
-print( paste( 'Priors section took', Sys.time() - start.time))
 
 #### MCMC quantities - burnin, n.sample, thin
 common.burnin.nsample.thin.check(burnin, n.sample, thin)  
 
-print( paste( 'MCMC quantities section took', Sys.time() - start.time))
 
 
 #############################
@@ -72,8 +67,7 @@ tau2 <- var(phi) / 10
 nu2 <- tau2
 fitted <- as.numeric(X.standardised %*% beta) + offset + phi
    
-print( paste( 'Initial parameters section took', Sys.time() - start.time))
-
+ 
 ###############################    
 #### Set up the MCMC quantities    
 ###############################
@@ -88,7 +82,6 @@ samples.loglike <- array(NA, c(n.keep, K))
 samples.fitted <- array(NA, c(n.keep, K))
     if(n.miss>0) samples.Y <- array(NA, c(n.keep, n.miss))
     
-print( paste( 'Matrices to store samples section took', Sys.time() - start.time))
 
 #### Metropolis quantities
 accept <- rep(0,2)
@@ -97,13 +90,12 @@ proposal.sd.rho <- 0.02
 tau2.posterior.shape <- prior.tau2[1] + 0.5*K
 nu2.posterior.shape <- prior.nu2[1] + 0.5*K
     
-print( paste( 'Metropolis quantities section took', Sys.time() - start.time))
-
+    
 ##################################
 #### Set up the spatial quantities
 ##################################
 #### CAR quantities
-W.quants <- common.Wcheckformat(W)
+# W.quants <- common.Wcheckformat(W)
 W <- W.quants$W
 W.triplet <- W.quants$W.triplet
 n.triplet <- W.quants$n.triplet
@@ -111,8 +103,7 @@ W.triplet.sum <- W.quants$W.triplet.sum
 n.neighbours <- W.quants$n.neighbours 
 W.begfin <- W.quants$W.begfin
     
-print( paste( 'CAR quantities section took', Sys.time() - start.time))
-
+    
 #### Create the determinant     
     if(!fix.rho)
     {
@@ -123,8 +114,7 @@ print( paste( 'CAR quantities section took', Sys.time() - start.time))
     }else
     {}   
     
-print( paste( 'Create the determinant section took', Sys.time() - start.time))
-
+    
 #### Check for islands
 W.list<- mat2listw(W)
 W.nb <- W.list$neighbours
@@ -133,8 +123,7 @@ islands <- W.islands$comp.id
 n.islands <- max(W.islands$nc)
 if(rho==1) tau2.posterior.shape <- prior.tau2[1] + 0.5 * (K-n.islands)   
     
-print( paste( 'Check for islands section took', Sys.time() - start.time))
-
+    
 #### Beta update quantities
 data.precision.beta <- t(X.standardised) %*% X.standardised
     if(length(prior.var.beta)==1)
@@ -145,8 +134,7 @@ data.precision.beta <- t(X.standardised) %*% X.standardised
     prior.precision.beta <- solve(diag(prior.var.beta))
     }
     
-print( paste( 'Beta update section took', Sys.time() - start.time))
-
+    
 
 ###########################
 #### Run the Bayesian model

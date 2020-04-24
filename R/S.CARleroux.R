@@ -1,4 +1,4 @@
-S.CARleroux <- function(formula, formula.omega=NULL, family, data=NULL,  trials=NULL, W, burnin, n.sample, thin=1, prior.mean.beta=NULL, prior.var.beta=NULL, prior.nu2=NULL, prior.tau2=NULL, prior.mean.delta=NULL, prior.var.delta=NULL, rho=NULL, MALA=FALSE, verbose=TRUE)
+S.CARleroux <- function(formula, formula.omega=NULL, family, data=NULL,  trials=NULL, W.quants, burnin, n.sample, thin=1, prior.mean.beta=NULL, prior.var.beta=NULL, prior.nu2=NULL, prior.tau2=NULL, prior.mean.delta=NULL, prior.var.delta=NULL, rho=NULL, MALA=FALSE, verbose=TRUE)
 {
     #### This is a wrapper function that calls one of
     ## binomial.lerouxCAR
@@ -16,7 +16,7 @@ S.CARleroux <- function(formula, formula.omega=NULL, family, data=NULL,  trials=
     {
         if(!is.null(trials)) stop("you do not need a trials arugment as a binomial model was not specified", call.=FALSE)
         if(!is.null(formula.omega)) stop("you do not need a formula.omega argument as the zip model was not specified", call.=FALSE)
-        model <- gaussian.lerouxCAR(formula=formula, data=data,  W=W, burnin=burnin, n.sample=n.sample, thin=thin, prior.mean.beta=prior.mean.beta, prior.var.beta=prior.var.beta, prior.nu2=prior.nu2, prior.tau2=prior.tau2, rho=rho, verbose=verbose)          
+        model <- gaussian.lerouxCAR(formula=formula, data=data,  W.quants=W.quants, burnin=burnin, n.sample=n.sample, thin=thin, prior.mean.beta=prior.mean.beta, prior.var.beta=prior.var.beta, prior.nu2=prior.nu2, prior.tau2=prior.tau2, rho=rho, verbose=verbose)          
     }else if(family=="poisson")
     {
         if(!is.null(trials)) stop("you do not need a trials arugment as a binomial model was not specified", call.=FALSE)
