@@ -123,6 +123,8 @@ print( paste( "W.quants section at", round(proc.time()[3]-a[3], 1)))
     det.Q <- 0.5 * sum(log((rho * Wstar.val + (1-rho))))    
     }else
     {}   
+print( det.Q)
+print( paste( "det.Q is", det.Q))
 print( paste( "Create determinants section at", round(proc.time()[3]-a[3], 1)))
 
     
